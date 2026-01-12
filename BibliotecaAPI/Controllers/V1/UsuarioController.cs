@@ -24,10 +24,11 @@ namespace BibliotecaAPI.Controllers.V1
         private readonly IServiciosUsuarios serviciosUsuarios;
         private readonly AplicationDBContext context;
         private readonly IMapper mapper;
+        private readonly IServicioLlaves servicioLlaves;
 
         public UsuariosController(UserManager<Usuario> userManager, IConfiguration configuration,
             SignInManager<Usuario> signInManager, IServiciosUsuarios serviciosUsuarios,
-            AplicationDBContext context, IMapper mapper)
+            AplicationDBContext context, IMapper mapper, IServicioLlaves servicioLlaves)
         {
             this.userManager = userManager;
             this.configuration = configuration;
@@ -35,6 +36,7 @@ namespace BibliotecaAPI.Controllers.V1
             this.serviciosUsuarios = serviciosUsuarios;
             this.context = context;
             this.mapper = mapper;
+            this.servicioLlaves = servicioLlaves;
         }
 
         [HttpGet(Name = "ObtenerUsuariosV1")]
@@ -61,6 +63,7 @@ namespace BibliotecaAPI.Controllers.V1
             if (resultado.Succeeded)
             {
                 var respuestaAutenticacion = await ConstruirToken(credencialesUsuarioDTO, usuario.Id);
+                await servicioLlaves.CrearLlave(usuario.Id, TipoLlave.Gratuita);
                 return respuestaAutenticacion;
             }
             else
