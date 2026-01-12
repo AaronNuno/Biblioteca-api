@@ -6,5 +6,6 @@ namespace BibliotecaAPI.Servicios
     public interface IServiciosUsuarios
     {
         Task<Usuario?> ObetenerUsuario();
+        string? ObetenerUsuarioId();
     }
 }

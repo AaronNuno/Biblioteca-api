@@ -60,7 +60,7 @@ namespace BibliotecaAPI.Controllers.V1
 
             if (resultado.Succeeded)
             {
-                var respuestaAutenticacion = await ConstruirToken(credencialesUsuarioDTO);
+                var respuestaAutenticacion = await ConstruirToken(credencialesUsuarioDTO, usuario.Id);
                 return respuestaAutenticacion;
             }
             else
@@ -90,7 +90,7 @@ namespace BibliotecaAPI.Controllers.V1
 
             if (resultado.Succeeded)
             {
-                return await ConstruirToken(credencialesUsuarioDTO);
+                return await ConstruirToken(credencialesUsuarioDTO, usuario.Id);
             }
             else
             {
@@ -128,7 +128,7 @@ namespace BibliotecaAPI.Controllers.V1
 
             var credencialesUsuarioDTO = new CredencialesUsuarioDTO { Email = usuario.Email! };
 
-            var respuestaAutenticacion = await ConstruirToken(credencialesUsuarioDTO);
+            var respuestaAutenticacion = await ConstruirToken(credencialesUsuarioDTO, usuario.Id   );
             return respuestaAutenticacion;
         }
 
@@ -169,12 +169,13 @@ namespace BibliotecaAPI.Controllers.V1
         }
 
         private async Task<RespuestaAutentificacionDTO> ConstruirToken(
-            CredencialesUsuarioDTO credencialesUsuarioDTO)
+            CredencialesUsuarioDTO credencialesUsuarioDTO, string usuarioId)
         {
             var claims = new List<Claim>
             {
                 new Claim("email", credencialesUsuarioDTO.Email),
-                new Claim("lo que yo quiera", "cualquier valor")
+                new Claim("lo que yo quiera", "cualquier valor"),
+                new Claim("usuarioId", usuarioId)
             };
 
             var usuario = await userManager.FindByEmailAsync(credencialesUsuarioDTO.Email);
