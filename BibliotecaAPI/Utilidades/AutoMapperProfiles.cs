@@ -9,6 +9,9 @@ namespace BibliotecaAPI.Utilidades
     {
         public AutoMapperProfiles()
         {
+
+            CreateMap<LlaveAPI, LlaveDTO> ();
+
             CreateMap<Autor, AutorDTO>()
                 .ForMember(
                     dto => dto.NombreCompleto,
