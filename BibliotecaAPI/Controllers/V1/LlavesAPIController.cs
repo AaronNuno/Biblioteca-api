@@ -13,6 +13,7 @@ namespace BibliotecaAPI.Controllers.V1
     [Route("api/v1/llavesapi")]
     [Authorize]
     [ApiController]
+    [DeshabilitarLimitarPeticiones]
     public class LlavesAPIController : ControllerBase
     {
         private readonly AplicationDBContext context;
