@@ -16,7 +16,7 @@ namespace BibliotecaAPI.Servicios
 
         public string? ObetenerUsuarioId()
         {
-            var idClaim = contextAccessor.HttpContext!.User.Claims.Where(x=>x.Type == "usuarioid").FirstOrDefault();
+            var idClaim = contextAccessor.HttpContext!.User.Claims.Where(x=>x.Type == "usuarioId").FirstOrDefault();
 
             if (idClaim is null)
             {
