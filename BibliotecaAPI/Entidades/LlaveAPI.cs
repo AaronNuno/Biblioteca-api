@@ -9,6 +9,10 @@
         public required string UsuarioId { get; set; }
         public Usuario? Usuario { get; set; }
 
+        public List<RestriccionIP> RestriccionesIP { get; set; } = [];
+        public List<RestriccionDominio> RestriccionesDominio { get; set; } = [];
+
+
     }
 
     public enum TipoLlave
