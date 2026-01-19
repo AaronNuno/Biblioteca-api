@@ -8,7 +8,7 @@ namespace BibliotecaAPI.Entidades
         public int LlaveId { get; set; }
 
         [Required]
-        public required string Dominio { get; set; }
+        public required string Dominio { get; set; } // IP
         public LlaveAPI? Llave { get; set; }
     }
 }

@@ -132,7 +132,9 @@ namespace BibliotecaAPI.Utilidades
 
             var peticionSuperaLasRestriccionesDeDominio = PeticionSuperaLasRestriccionesDeDominio(llaveAPI.RestriccionesDominio, httpContext);
 
-            return peticionSuperaLasRestriccionesDeDominio;
+            var peticionSuperaLasRestriccionesDeIP = PeticionesSuperaLasRestriccionesDeIP(llaveAPI.RestriccionesIP, httpContext);
+
+            return peticionSuperaLasRestriccionesDeDominio || peticionSuperaLasRestriccionesDeIP;
         }
 
         private bool PeticionSuperaLasRestriccionesDeDominio(List<RestriccionDominio> restricciones, HttpContext httpContext)
@@ -153,6 +155,31 @@ namespace BibliotecaAPI.Utilidades
             var dominio = miURI.Host;
 
             var superaRestriccion = restricciones.Any(x=>x.Dominio == dominio);
+            return superaRestriccion;
+        }
+
+        private bool PeticionesSuperaLasRestriccionesDeIP(List<RestriccionIP> restricciones, HttpContext httpContext)
+        {
+            if (restricciones is null || restricciones.Count == 0)
+            {
+                return false;
+            }
+
+            var remoteIpAdress = httpContext.Connection.RemoteIpAddress;    
+
+            if(remoteIpAdress is null)
+            {
+                return false;
+            }
+
+            var IP = remoteIpAdress.ToString();
+
+            if (IP == string.Empty)
+            {
+                return false;
+            }
+
+            var superaRestriccion = restricciones.Any(x=>x.Dominio == IP);
             return superaRestriccion;
         }
     }
