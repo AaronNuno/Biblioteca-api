@@ -36,6 +36,7 @@ namespace BibliotecaAPI.Controllers.V1
             var usuarioId = serviciosUsuarios.ObetenerUsuarioId();
             var llaves = await context.LlavesAPI
                 .Include(x => x.RestriccionesDominio)
+                .Include(x=>x.RestriccionesIP)
                 .Where(x => x.UsuarioId == usuarioId).ToListAsync();
             return mapper.Map<IEnumerable<LlaveDTO>>(llaves);
         }

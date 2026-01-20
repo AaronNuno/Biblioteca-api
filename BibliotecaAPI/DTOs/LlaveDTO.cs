@@ -8,5 +8,6 @@
         public required string TipoLlave { get; set; }
 
         public List<RestriccionDominioDTO> RestriccionesDominio { get; set; } = [];
+        public List<RestriccionIPDTO> RestriccionesIP { get; set; } = [];
     }
 }

@@ -179,7 +179,7 @@ namespace BibliotecaAPI.Utilidades
                 return false;
             }
 
-            var superaRestriccion = restricciones.Any(x=>x.Dominio == IP);
+            var superaRestriccion = restricciones.Any(x=>x.IP == IP);
             return superaRestriccion;
         }
     }
