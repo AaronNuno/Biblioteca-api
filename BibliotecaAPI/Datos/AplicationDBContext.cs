@@ -27,13 +27,8 @@ namespace BibliotecaAPI.Datos
         public DbSet<LlaveAPI> LlavesAPI { get; set; }
         public DbSet<Peticion> Peticiones { get;set; }
 
-        public DbSet<RestriccionDominio> restriccionDominio { get; set; }
-        public DbSet<RestriccionIP> restriccionIP { get; set; }
-
-
-
-
-
+        public DbSet<RestriccionDominio> RestriccionDominio { get; set; }
+        public DbSet<RestriccionIP> RestriccionIP { get; set; }
 
 
     }
