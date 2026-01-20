@@ -19,8 +19,13 @@ namespace BibliotecaAPI.Jobs
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    await EmitirFacturas();
-                    await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
+                    using (var scope = services.CreateScope())
+                    {
+                        var context = scope.ServiceProvider.GetRequiredService<AplicationDBContext>();
+                        await EmitirFacturas(context);
+                        await SetearUsuariosMalaPaga(context);
+                        await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
+                    }
                 }
             }catch (OperationCanceledException)
             {
@@ -28,11 +33,15 @@ namespace BibliotecaAPI.Jobs
             }
         }
 
-        private async Task EmitirFacturas()
+        private async Task SetearUsuariosMalaPaga(AplicationDBContext context)
         {
-            using (var scope = services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<AplicationDBContext>();
+            await context.Database.ExecuteSqlAsync($"EXEC Usuarios_SetearMalaPaga");
+        }
+
+
+        private async Task EmitirFacturas(AplicationDBContext context)
+        {
+
                 var hoy = DateTime.Today;
                 var fechaComparacion = hoy.AddMonths(-1);
 
@@ -48,6 +57,6 @@ namespace BibliotecaAPI.Jobs
                 }
             }
 
-        }
+        
     }
 }
