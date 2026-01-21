@@ -14,11 +14,24 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 // área de servicios .NET
+
+builder.Services.AddRateLimiter(opciones =>
+{
+    opciones.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "desconocido",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromSeconds(10)
+                    }));
+});
 
 builder.Services.AddOutputCache(opciones =>
 {
@@ -214,6 +227,8 @@ app.UseSwaggerUI(opciones =>
 });
 
 app.UseStaticFiles();
+
+app.UseRateLimiter();
 
 app.UseCors();
 
