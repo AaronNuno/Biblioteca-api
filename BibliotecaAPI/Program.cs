@@ -23,14 +23,41 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRateLimiter(opciones =>
 {
-    opciones.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+    /*opciones.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
                 RateLimitPartition.GetFixedWindowLimiter(
                     partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "desconocido",
                     factory: _ => new FixedWindowRateLimiterOptions
                     {
                         PermitLimit = 5,
                         Window = TimeSpan.FromSeconds(10)
-                    }));
+                    })); */
+    opciones.AddPolicy("general", context =>
+    {
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "desconocido",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromSeconds(10)
+            }
+
+            );
+
+    });
+
+    opciones.AddPolicy("estricta", context =>
+    {
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "desconocido",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 2,
+                Window = TimeSpan.FromSeconds(5)
+            }
+
+            );
+
+    });
 });
 
 builder.Services.AddOutputCache(opciones =>

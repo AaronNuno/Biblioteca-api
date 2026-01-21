@@ -19,6 +19,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.OutputCaching;
 using BibliotecaAPI.Servicios.V1;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BibliotecaAPI.Controllers.V1
 {
@@ -86,6 +87,7 @@ namespace BibliotecaAPI.Controllers.V1
 
         [HttpGet("filtrar", Name = "FiltrarAutoresV1")]
         [AllowAnonymous]
+        [EnableRateLimiting("general")]
         public async Task<ActionResult> Filtrar([FromQuery] AutorFiltroDTO autorFiltroDTO)
         {
             var queryable = context.Autores.AsQueryable();
