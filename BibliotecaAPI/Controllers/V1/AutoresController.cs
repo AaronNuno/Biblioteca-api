@@ -49,6 +49,31 @@ namespace BibliotecaAPI.Controllers.V1
             this.servicioAutoresV1 = servicioAutoresV1;
         }
 
+        [HttpGet("movil")]
+        [AllowAnonymous]
+        [EnableRateLimiting("movil")]
+        public IActionResult GetMovil()
+        {
+            return Ok("movil");
+        }
+
+        [HttpGet("cubeta")]
+        [AllowAnonymous]
+        [EnableRateLimiting("cubeta")]
+        public IActionResult GetCubeta()
+        {
+            return Ok("cubeta");
+        }
+
+        [HttpGet("concurrencia")]
+        [AllowAnonymous]
+        [EnableRateLimiting("concurrencia")]
+        public async Task<IActionResult> GetConcurrencia()
+        {
+            await Task.Delay(5000);
+            return Ok("concurrencia");
+        }
+
         [HttpGet(Name = "ObtenerAutoresV1")] // api/autores
         [AllowAnonymous]
         //[OutputCache(Tags = [cache])]

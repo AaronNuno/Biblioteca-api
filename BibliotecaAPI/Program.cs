@@ -58,7 +58,44 @@ builder.Services.AddRateLimiter(opciones =>
             );
 
     });
+
+    opciones.AddPolicy("movil", context =>
+    {
+        return RateLimitPartition.GetSlidingWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "desconocido",
+            factory: _ => new SlidingWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromSeconds(10),
+                SegmentsPerWindow = 2,
+                QueueLimit = 1,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            });
+    });
+
+    opciones.AddPolicy("cubeta", context =>
+    {
+        return RateLimitPartition.GetTokenBucketLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "desconocido",
+            factory: _ => new TokenBucketRateLimiterOptions
+            {
+                TokenLimit = 5,
+                TokensPerPeriod = 2,
+                ReplenishmentPeriod = TimeSpan.FromSeconds(10)
+            });
+    });
+opciones.AddPolicy("concurrencia", context =>
+{
+    return RateLimitPartition.GetConcurrencyLimiter(
+        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "desconocido",
+        factory: _ => new ConcurrencyLimiterOptions
+        {
+            PermitLimit = 1
+        });
+
 });
+
+
 
 builder.Services.AddOutputCache(opciones =>
 {
