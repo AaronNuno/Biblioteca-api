@@ -26,6 +26,7 @@ namespace BibliotecaAPI.Controllers.V1
     [ApiController]
     [Route("api/v1/autores")]
     [Authorize(Policy = "esadmin")]
+    [EnableRateLimiting("prueba-usuario")]
     public class AutoresController : ControllerBase
     {
         private readonly AplicationDBContext context;
